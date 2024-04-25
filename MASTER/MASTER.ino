@@ -3,17 +3,23 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 
-void setup() {
+int speedPin=2;
+int dirPin1=5;
+int dirPin2=4;
+int speedMotor= 90;
+int dt = 100;
+int dt2 = 5000;
 
-  //i2c
+void setup() {
   Wire.begin();
 
-  //lcd
   lcd.init();                      
   lcd.backlight();
 
-  //motor
-
+  
+  pinMode(speedPin,OUTPUT);
+  pinMode(dirPin1,OUTPUT);
+  pinMode(dirPin2,OUTPUT);
   Serial.begin(9600); 
 }
 
@@ -23,9 +29,9 @@ void loop() {
 
     int distancia = Wire.read() | (Wire.read() << 8);
     int temperatura = Wire.read() | (Wire.read() << 8);
-    char key = Wire.read() | (Wire.read() << 8);
+    char key = Wire.read();
+    float humidity = Wire.read() | (Wire.read() << 8);
 
-    //LCD
     lcd.setCursor(0, 0);  
     lcd.print("Temp: ");
     lcd.print(temperatura);
@@ -35,10 +41,18 @@ void loop() {
     lcd.print("Key: ");
     lcd.print(key);
 
-    //MOTOR
-
-
-    //consola
+  
+    if(temperatura >= 29){
+      digitalWrite(dirPin1,0);
+      digitalWrite(dirPin2,1);
+      analogWrite(speedPin, 500);
+      delay(dt);
+      analogWrite(speedPin, speedMotor);
+      delay(dt2);
+    } else{
+      analogWrite(speedPin, 0);
+    }
+   
     Serial.print("Distancia: ");
     Serial.print(distancia);
     Serial.println(" cm");
@@ -50,13 +64,15 @@ void loop() {
     Serial.print("Tecla presionada: ");
     Serial.println(key);
 
+    Serial.print("Humedad: ");
+    Serial.println(humidity);
+
   } else {
-    Serial.println("Datos incompletos recibidos");
+    Serial.println("Datos no recuperadoss");
   }
 
-  delay(1000);
+  delay(2000);
 }
-
 
 
 

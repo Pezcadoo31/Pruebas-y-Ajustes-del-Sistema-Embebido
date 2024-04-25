@@ -4,7 +4,7 @@
 #include <DHT.h>  
 #include <Wire.h>
 
-#define DHTPIN 49     // Define el pin al que está conectado el sensor DHT (pin 2)
+#define DHTPIN 2   // Define el pin al que está conectado el sensor DHT (pin 2)
 #define DHTTYPE DHT11   // Define el tipo de sensor DHT como DHT11
 
 DHT dht(DHTPIN, DHTTYPE);  // Crea un objeto de la clase DHT y lo inicializa con el pin y el tipo definidos anteriormente
@@ -15,6 +15,7 @@ const byte columsCount = 4;
 long duration;
 int distanceCm;
 int temp;
+int hum;
 
  
 char keys[rowsCount][columsCount] = {
@@ -31,14 +32,13 @@ const int TriggerPin = 12;
  
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, rowsCount, columsCount);
 char key;
-
 void setup() {
    Serial.begin(9600);
    pinMode(TriggerPin, OUTPUT);
    pinMode(EchoPin, INPUT);
    dht.begin();  // Inicializa el sensor DHT
 
-   Wire.begin(8);                // Este Esclavo es el número 2
+   Wire.begin(8);                
    Wire.onRequest(requestEvent);
  
 }
@@ -67,6 +67,7 @@ void loop() {
   float humidity = dht.readHumidity();  // Lee la humedad del ambiente desde el sensor DHT y la almacena en la variable humidity
   float temperature = dht.readTemperature();
   temp = int(temperature);
+  hum = float(humidity);
 
     Serial.print("Temperatura: ");
     Serial.print(temp);
@@ -85,6 +86,6 @@ void requestEvent()
 {
  Wire.write((uint8_t*)&distanceCm, sizeof(distanceCm));
   Wire.write((uint8_t*)&temp, sizeof(temp)); 
-  Wire.write((uint8_t*)&key, sizeof(key));            
+  Wire.write((char*)&key, sizeof(key));   
+  Wire.write((uint8_t*)&hum, sizeof(hum));         
 }
-
