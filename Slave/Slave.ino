@@ -1,3 +1,5 @@
+// SLAVE
+
 #include <Keypad.h>
 #include <DHT.h>  
 #include <Wire.h>
@@ -29,6 +31,7 @@ const int TriggerPin = 12;
  
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, rowsCount, columsCount);
 char key;
+
 void setup() {
    Serial.begin(9600);
    pinMode(TriggerPin, OUTPUT);
