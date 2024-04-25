@@ -47,10 +47,10 @@ void setup() {
     Wire.begin(); // Iniciar la comunicación I2C
     distanceQueue = xQueueCreate(1, sizeof(int)); // Crear cola para la distancia medida por el sensor ultrasónico
 
-    xTaskCreate(taskUltrasonic, "Ultrasonic", 100, NULL, 1, NULL); // Crear tarea para el sensor ultrasónico
-    xTaskCreate(taskDHT, "DHT", 100, NULL, 1, NULL); // Crear tarea para el sensor DHT
+    xTaskCreate(taskUltrasonic, "Ultrasonic", 100, NULL, 2, NULL); // Crear tarea para el sensor ultrasónico
+    xTaskCreate(taskDHT, "DHT", 100, NULL, 3, NULL); // Crear tarea para el sensor DHT
     xTaskCreate(taskKeypad, "Keypad", 100, NULL, 1, NULL); // Crear tarea para el teclado
-    xTaskCreate(taskI2C, "I2C", 100, NULL, 1, NULL); // Crear tarea para la comunicación I2C
+    xTaskCreate(taskI2C, "I2C", 100, NULL, 4, NULL); // Crear tarea para la comunicación I2C
 
     vTaskStartScheduler(); // Iniciar el planificador de tareas
 }
